@@ -103,6 +103,7 @@ public class PlayerControls : MonoBehaviour
         //Return player to (0, 0, 0)
         if (Input.GetKeyDown("u"))
         {
+            rb.velocity = Vector2.zero; //remove velocity
             tf.position = new Vector3(0, 0, 0);
         }
 

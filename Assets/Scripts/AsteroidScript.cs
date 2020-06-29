@@ -5,6 +5,7 @@ using UnityEngine;
 public class AsteroidScript : MonoBehaviour
 {
     public GameManager instance;
+    public GameObject thisAsteroid; //holds this asteroid
     public float maxThrust; // hold asteroid max thrust
     public float maxTorque; // hold asteroid max torque
     public Rigidbody2D rb; //rigidbody var
@@ -18,7 +19,6 @@ public class AsteroidScript : MonoBehaviour
     public int points; //how many points asteroid is worth
     public GameObject explosion;
     public GameObject player; //variable for player reference
-    public PlayerControls playerControls; //holds controls script
 
     // Start is called before the first frame update
     void Start()
@@ -95,17 +95,19 @@ public class AsteroidScript : MonoBehaviour
             Destroy(newExplosion, 3f);
             //destroy current asteroid
             Destroy(this.gameObject);
+
         }
        
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collider2D other)
     {
         if (CompareTag("Player"))
         {
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
             //destroy yourself
-            Destroy(this.gameObject);
+            Destroy(other.gameObject);
+            Destroy(thisAsteroid);
         }
     }
 }

@@ -12,6 +12,7 @@ public class AlienControls : MonoBehaviour
     public int points; //how many points asteroid is worth
     public GameObject player; //variable for player reference
     public GameObject explosion; //holds our explosion effect
+    public GameObject thisAlien; //holds the alien ship
     public float screenTop; //hold screen boundary +y
     public float screenBottom; //hold screen boundary -y
     public float screenRight; //hold screen boundary x
@@ -77,14 +78,15 @@ public class AlienControls : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collider2D other)
     {
         if (CompareTag("Player"))
         {
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
             //destroy yourself
-            Destroy(this.gameObject);
+            Destroy(other.gameObject);
+            Destroy(thisAlien);
         }
     }
 }

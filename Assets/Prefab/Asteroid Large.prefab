@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instance: {fileID: 0}
+  thisAsteroid: {fileID: 1177651235292113212}
   maxThrust: 1000
   maxTorque: 5000
   rb: {fileID: 8664869765566679312}
@@ -148,3 +149,5 @@ MonoBehaviour:
     type: 3}
   points: 10
   explosion: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
+  player: {fileID: 0}
+  playerControls: {fileID: 0}
