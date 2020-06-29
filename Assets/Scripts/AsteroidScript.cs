@@ -87,7 +87,8 @@ public class AsteroidScript : MonoBehaviour
             player.SendMessage("ScorePoints", points);
 
             //make an explosion
-            Instantiate(explosion, transform.position, transform.rotation);
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(newExplosion, 3f);
 
             //destroy current asteroid
             Destroy(gameObject);
