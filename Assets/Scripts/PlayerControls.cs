@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerControls : MonoBehaviour
 {
+    public GameManager instance; //var for gameManager
     public GameObject thisPlayer; //variable to store GameObject
     public Transform tf; // A variable to hold our Transform component
     public Rigidbody2D rb; //Rigidbody2D var
@@ -14,29 +15,20 @@ public class PlayerControls : MonoBehaviour
     public float turnThrust; //to hold rotation speed
     private float thrustInput; //to set thrust inputs
     private float turnInput; //to set turn input
-    
+    public float terminalForce; //for death force
+
+
 
     public float screenTop; //hold screen boundary +y
     public float screenBottom; //hold screen boundary -y
     public float screenRight; //hold screen boundary x
     public float screenLeft; //hold screen boundary -x
 
-    public int score; //public player score for testing
-    public int lives; //lives for player
-
-    public Text scoreText; //reference to score text
-    public Text livesText; //reference to lives text
-
-    public float terminalForce; //for death force
-
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); //get object rigidbody compoenent
-        score = 0; //initialize score
-        scoreText.text = "" + score;//update score text in UI
-        livesText.text = "Lives: " + lives;//update lives in UI
     }
 
     // Update is called once per frame
@@ -115,12 +107,6 @@ public class PlayerControls : MonoBehaviour
         {
             Application.Quit();
         }
-
-        //make thisShip inactive
-        if (Input.GetKeyDown("q"))
-        {
-            thisPlayer.SetActive(false);
-        }
     }
 
     //update on a fixed time interval for consistency
@@ -135,20 +121,14 @@ public class PlayerControls : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log(collision.relativeVelocity.magnitude);
-        if (collision.relativeVelocity.magnitude > terminalForce) 
+        if (collision.relativeVelocity.magnitude > terminalForce)
         {
-            lives--; //decrement lives on collision
-            livesText.text = "Lives: " + lives;//update lives in UI
-            if (lives <= 0) //if lives are less than or equal to 0 game over
+            GameManager.instance.lives--; //decrement lives on collision
+            GameManager.instance.livesText.text = "Lives: " + GameManager.instance.lives;//update lives in UI
+            if (GameManager.instance.lives <= 0) //if lives are less than or equal to 0 game over
             {
-                //game over
+                thisPlayer.SetActive(false);
             }
         }
-    }
-
-    void ScorePoints(int addPoints)
-    {
-        score += addPoints;
-        scoreText.text = "" + score;//update score text in UI
     }
 }

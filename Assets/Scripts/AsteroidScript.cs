@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AsteroidScript : MonoBehaviour
 {
+    public GameManager instance;
     public float maxThrust; // hold asteroid max thrust
     public float maxTorque; // hold asteroid max torque
     public Rigidbody2D rb; //rigidbody var
@@ -15,7 +16,6 @@ public class AsteroidScript : MonoBehaviour
     public GameObject asteroidMedium; //reference to medium size prefab
     public GameObject asteroidSmall; //reference to small size prefab
     public int points; //how many points asteroid is worth
-    public GameObject player; //variable for player reference
     public GameObject explosion;
 
     // Start is called before the first frame update
@@ -27,9 +27,6 @@ public class AsteroidScript : MonoBehaviour
 
         rb.AddForce(thrust); //apply thrust to rigid body as a force
         rb.AddTorque(torque); //apply torque to rigidbody to rotate
-
-        //find the player
-        player = GameObject.FindWithTag("Player");
        
     }
 
@@ -71,7 +68,7 @@ public class AsteroidScript : MonoBehaviour
             {
                 //spawn 2 medium asteroids at the same spot of the large that was destroyed
                 Instantiate(asteroidMedium, transform.position, transform.rotation);
-                Instantiate(asteroidMedium, transform.position, transform.rotation); 
+                Instantiate(asteroidMedium, transform.position, transform.rotation);
             }
             else if (asteroidSize == 2) //else if its medium
             {
@@ -84,12 +81,11 @@ public class AsteroidScript : MonoBehaviour
                 //give player points
             }
             //tell the player to score points
-            player.SendMessage("ScorePoints", points);
+            GameManager.instance.SendMessage("ScorePoints", points);
 
             //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
-
             //destroy current asteroid
             Destroy(gameObject);
         }

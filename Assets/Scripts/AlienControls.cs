@@ -5,7 +5,6 @@ using UnityEngine;
 public class AlienControls : MonoBehaviour
 {
     public GameManager instance;
-    public GameObject alienShip;
     public Rigidbody2D rb; //alien rigidbody
     public Transform targetLock; //player position
     public Transform alienPos; //alien position
@@ -53,9 +52,10 @@ public class AlienControls : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //enemy ship chases player
         float xDelta = targetLock.localPosition.x - alienPos.localPosition.x;
         float yDelta = targetLock.localPosition.y - alienPos.localPosition.y;
-        rb.AddForce(new Vector3(xDelta * chaseSpeed, yDelta * chaseSpeed), ForceMode2D.Impulse);
+        rb.AddForce(new Vector3(xDelta * chaseSpeed, yDelta * chaseSpeed));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -63,7 +63,7 @@ public class AlienControls : MonoBehaviour
         //check to see if collision is the laser
         if (other.CompareTag("laser"))
         {
-            player.SendMessage("ScorePoints", points);
+            instance.SendMessage("ScorePoints", points);
 
             //make an explosion
             Instantiate(explosion, transform.position, transform.rotation);
@@ -71,9 +71,10 @@ public class AlienControls : MonoBehaviour
             //destroy current asteroid
             Destroy(gameObject);
         }
-        if (other.CompareTag("Player")) 
+        else if (other.CompareTag("Player")) 
         {
-            
+            Destroy(gameObject);
+            Destroy(other.gameObject);
         }
 
     }
