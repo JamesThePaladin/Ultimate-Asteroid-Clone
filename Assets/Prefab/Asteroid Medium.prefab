@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1611524855}
   m_Layer: 0
   m_Name: Asteroid Medium
-  m_TagString: Untagged
+  m_TagString: Asteroid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ba9e77f853fb242ad50fa2e9f5712b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instance: {fileID: 0}
   maxThrust: 100
   maxTorque: 200
   rb: {fileID: 1611524857}
@@ -145,5 +146,4 @@ MonoBehaviour:
   asteroidSmall: {fileID: 3888285266124317997, guid: 5573d497a201be448bdcfda31508f8bb,
     type: 3}
   points: 50
-  player: {fileID: 0}
   explosion: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}

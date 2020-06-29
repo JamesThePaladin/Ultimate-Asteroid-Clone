@@ -16,6 +16,7 @@ public class PlayerControls : MonoBehaviour
     private float thrustInput; //to set thrust inputs
     private float turnInput; //to set turn input
     public float terminalForce; //for death force
+    public GameObject explosion; //holds our explosion effect
 
 
 
@@ -23,6 +24,9 @@ public class PlayerControls : MonoBehaviour
     public float screenBottom; //hold screen boundary -y
     public float screenRight; //hold screen boundary x
     public float screenLeft; //hold screen boundary -x
+
+    public Color invColor;
+    public Color normalColor;
 
 
     // Start is called before the first frame update
@@ -117,17 +121,40 @@ public class PlayerControls : MonoBehaviour
         rb.AddTorque(turnInput * turnThrust);
     }
 
-    //Player collision function
-    private void OnCollisionEnter2D(Collision2D collision)
+    void Respawn() 
     {
-        Debug.Log(collision.relativeVelocity.magnitude);
-        if (collision.relativeVelocity.magnitude > terminalForce)
+        rb.velocity = Vector2.zero; //remove velocity
+        transform.position = Vector2.zero; //reset vector
+        SpriteRenderer sr = GetComponent<SpriteRenderer>(); //store renderer
+        sr.enabled = true;
+        sr.color = invColor;
+        Invoke("Invulnerable", 3f); //waits to put the collider back
+    }
+
+    void Invulnerable() 
+    {
+        GetComponent<Collider2D>().enabled = true; //enable collider
+        GetComponent<SpriteRenderer>().color = normalColor;
+    }
+
+    //Player collision function
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        Debug.Log(col.relativeVelocity.magnitude);
+        if (col.relativeVelocity.magnitude > terminalForce)
         {
             GameManager.instance.lives--; //decrement lives on collision
             GameManager.instance.livesText.text = "Lives: " + GameManager.instance.lives;//update lives in UI
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(newExplosion, 3f);
+            //respawn - new life
+            GetComponent<SpriteRenderer>().enabled = false; //disable renderer
+            GetComponent<Collider2D>().enabled = false; //disable collider
+            Invoke("Respawn", 3f);
+
             if (GameManager.instance.lives <= 0) //if lives are less than or equal to 0 game over
             {
-                thisPlayer.SetActive(false);
+                Application.Quit();
             }
         }
     }

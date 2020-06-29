@@ -17,10 +17,17 @@ public class AsteroidScript : MonoBehaviour
     public GameObject asteroidSmall; //reference to small size prefab
     public int points; //how many points asteroid is worth
     public GameObject explosion;
+    public GameObject player; //variable for player reference
+    public PlayerControls playerControls; //holds controls script
 
     // Start is called before the first frame update
     void Start()
     {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+        }
+
         // add a random amount of torque + thrust to asteroid
         Vector2 thrust = new Vector2(Random.Range(-maxThrust, maxThrust), Random.Range(-maxThrust, maxThrust));
         float torque = Random.Range(-maxTorque, maxTorque);
@@ -87,8 +94,18 @@ public class AsteroidScript : MonoBehaviour
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
             //destroy current asteroid
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
-        
+       
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (CompareTag("Player"))
+        {
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(newExplosion, 3f);
+            //destroy yourself
+            Destroy(this.gameObject);
+        }
     }
 }

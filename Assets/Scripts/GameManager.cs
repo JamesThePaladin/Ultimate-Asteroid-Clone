@@ -6,11 +6,15 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance; //variable that holds this instance of the GameManager
-    private PlayerControls controls; //to hold toggle
-    public List<Transform> spawnPoints; //spawn point index
+    private PlayerControls playerControls; //to hold toggle
+    public List<Transform> spawnPoints; //asteroid spawn point index
+    public List<Transform> alienSpawn;  //alien spawn point index
     public GameObject asteroidPrefab; //for asteroids
     public int numberOfAsteroids; //for number of asteroids
     public int maxAsteroids; //for number of asteroids
+    public GameObject alienPrefab; //for aliens
+    public int numberOfAliens; //for number of asteroids
+    public int maxAliens; //for number of asteroids
     float timer; //timer for spawning
     public float waitTime; //wait time for spawning 
     bool canSpawn; //boolean for spawning
@@ -38,7 +42,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controls = GetComponent<PlayerControls>();
+        PlayerControls playerControls = GetComponent<PlayerControls>();
         scoreText.text = "" + score;//update score text in UI
         livesText.text = "Lives: " + lives;//update lives in UI
     }
@@ -49,24 +53,34 @@ public class GameManager : MonoBehaviour
         //toggle cotrols on/off
         if (Input.GetKeyDown(KeyCode.P))
         {
-            controls.enabled = !controls.enabled; //inverse component state
+            playerControls.enabled = !playerControls.enabled; //inverse component state
             Debug.Log("controls have been toggled"); //
         }
 
-        timer -= Time.deltaTime;
+        timer -= Time.deltaTime; //set time that is subtracted by time that has passed
         if (timer < 1) 
         {
-            canSpawn = true;
-            timer = waitTime;
+            canSpawn = true; //initialize spawn to true
+            timer = waitTime; //set timer to cooldown
         }
-        if (maxAsteroids > numberOfAsteroids) 
+        if (maxAsteroids > numberOfAsteroids)  //if the number of asteroids is less than the max amount of asteroids
         {
-            if (canSpawn == true) 
+            if (canSpawn == true) //and if cooldown is up
             {
-                int random = Random.Range(0, spawnPoints.Count);
+                int random = Random.Range(0, spawnPoints.Count); //choose randomly from list of spawn points
                 GameObject asteroid = Instantiate(asteroidPrefab, spawnPoints[random].position, spawnPoints[random].rotation);
                 numberOfAsteroids++;
                 canSpawn =  false;
+            }
+        }
+        if (maxAliens > numberOfAliens)  //if the number of aliens is less than the max amount aliens
+        {
+            if (canSpawn == true) //and if cooldown is up
+            {
+                int random = Random.Range(0, alienSpawn.Count); //choose randomly from list of spawn points
+                GameObject alien = Instantiate(alienPrefab, spawnPoints[random].position, spawnPoints[random].rotation);
+                numberOfAliens++;
+                canSpawn = false;
             }
         }
     }

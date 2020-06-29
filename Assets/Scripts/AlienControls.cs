@@ -8,7 +8,7 @@ public class AlienControls : MonoBehaviour
     public Rigidbody2D rb; //alien rigidbody
     public Transform targetLock; //player position
     public Transform alienPos; //alien position
-    public float chaseSpeed; //var for chase speed
+    public float homingSpeed; //var for chase speed
     public int points; //how many points asteroid is worth
     public GameObject player; //variable for player reference
     public GameObject explosion; //holds our explosion effect
@@ -21,7 +21,12 @@ public class AlienControls : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+        }
+        //get transform of player
+        targetLock = player.GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -55,7 +60,7 @@ public class AlienControls : MonoBehaviour
         //enemy ship chases player
         float xDelta = targetLock.localPosition.x - alienPos.localPosition.x;
         float yDelta = targetLock.localPosition.y - alienPos.localPosition.y;
-        rb.AddForce(new Vector3(xDelta * chaseSpeed, yDelta * chaseSpeed));
+        rb.AddForce(new Vector3(xDelta * homingSpeed, yDelta * homingSpeed));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -63,19 +68,23 @@ public class AlienControls : MonoBehaviour
         //check to see if collision is the laser
         if (other.CompareTag("laser"))
         {
-            instance.SendMessage("ScorePoints", points);
-
+            Destroy(other.gameObject); //destroy the laser
             //make an explosion
-            Instantiate(explosion, transform.position, transform.rotation);
-
-            //destroy current asteroid
-            Destroy(gameObject);
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(newExplosion, 3f);
+            GameManager.instance.SendMessage("ScorePoints", points);
+            //destroy current instance
+            Destroy(this.gameObject);
         }
-        else if (other.CompareTag("Player")) 
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (CompareTag("Player"))
         {
-            Destroy(gameObject);
-            Destroy(other.gameObject);
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(newExplosion, 3f);
+            //destroy yourself
+            Destroy(this.gameObject);
         }
-
     }
 }
