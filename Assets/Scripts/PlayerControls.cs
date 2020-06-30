@@ -73,9 +73,9 @@ public class PlayerControls : MonoBehaviour
         //check for keyboard input
         else
         {
-            thrustInput = Input.GetAxis("Vertical");
-            turnInput = Input.GetAxis("Horizontal");
-            transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * turnThrust); //better turn movement than adding force
+            thrustInput = Input.GetAxis("Vertical"); //get forward and reverse input
+            turnInput = Input.GetAxis("Horizontal"); //get turn input
+            transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * turnThrust);
         }
 
         //screen wrapping
@@ -119,13 +119,12 @@ public class PlayerControls : MonoBehaviour
     {
         //apply thrust
         rb.AddRelativeForce(Vector2.up * thrustInput * thrust);
-        rb.AddTorque(turnInput * turnThrust);
     }
 
     void Respawn() 
     {
-        rb.velocity = Vector3.zero; //remove velocity
-        transform.position = Vector3.zero; //reset vector
+        rb.velocity = Vector2.zero; //remove velocity
+        transform.position = Vector2.zero; //reset vector
         SpriteRenderer sr = GetComponent<SpriteRenderer>(); //get and store renderer
         sr.enabled = true; //enable it
         sr.color = invColor; //set color to invulnerable color
