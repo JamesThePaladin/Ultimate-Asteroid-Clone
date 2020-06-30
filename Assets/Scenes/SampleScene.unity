@@ -1020,10 +1020,10 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_UseAutoMass: 1
+  m_Mass: 2.5731688
+  m_LinearDrag: 1
+  m_AngularDrag: 0.5
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -1059,7 +1059,7 @@ MonoBehaviour:
   thisPlayer: {fileID: 988325493}
   tf: {fileID: 988325496}
   rb: {fileID: 988325498}
-  thrust: 8
+  thrust: 10
   turnThrust: 8
   terminalForce: 2
   explosion: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
@@ -1340,7 +1340,7 @@ MonoBehaviour:
     type: 3}
   numberOfAliens: 0
   maxAliens: 4
-  waitTime: 2
+  waitTime: 3
   score: 0
   lives: 3
   scoreText: {fileID: 880389025}

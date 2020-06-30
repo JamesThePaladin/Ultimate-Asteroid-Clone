@@ -107,25 +107,25 @@ public class AsteroidScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (gameObject.tag == "Player" | gameObject.tag == "Enemy") 
+        if (other.gameObject)
         {
-            if (asteroidSize == 3)
-            {
-                //spawn 2 medium asteroids at the same spot of the large that was destroyed
-                Instantiate(asteroidMedium, transform.position, transform.rotation);
-                Instantiate(asteroidMedium, transform.position, transform.rotation);
-            }
-            else if (asteroidSize == 2) //else if its medium
-            {
-                //spawn 2 medium asteroids at the same spot of the large that was destroyed
-                Instantiate(asteroidSmall, transform.position, transform.rotation);
-                Instantiate(asteroidSmall, transform.position, transform.rotation);
-            }
-            else if (asteroidSize == 1) //else if its small
-            {
-                //give player points
-            }
-
+            //if (asteroidSize == 3)
+            //{
+            //    //spawn 2 medium asteroids at the same spot of the large that was destroyed
+            //    Instantiate(asteroidMedium, transform.position, transform.rotation);
+            //    Instantiate(asteroidMedium, transform.position, transform.rotation);
+            //}
+            //else if (asteroidSize == 2) //else if its medium
+            //{
+            //    //spawn 2 medium asteroids at the same spot of the large that was destroyed
+            //    Instantiate(asteroidSmall, transform.position, transform.rotation);
+            //    Instantiate(asteroidSmall, transform.position, transform.rotation);
+            //}
+            //else if (asteroidSize == 1) //else if its small
+            //{
+            //    //give player points
+            //}
+            //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
             //destroy the asteroid

@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerControls playerControls = GetComponent<PlayerControls>();
+        playerControls = GetComponent<PlayerControls>();
         scoreText.text = "" + score;//update score text in UI
         livesText.text = "Lives: " + lives;//update lives in UI
     }

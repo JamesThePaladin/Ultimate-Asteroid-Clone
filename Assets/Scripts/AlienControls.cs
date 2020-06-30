@@ -83,9 +83,9 @@ public class AlienControls : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D col)
     {
-        if (other.gameObject)
+        if (gameObject)
         {
             //explosion particle effect
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
