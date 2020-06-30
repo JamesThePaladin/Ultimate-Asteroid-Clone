@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour
     public int maxAliens; //for number of asteroids
     float timer; //timer for spawning
     public float waitTime; //wait time for spawning 
-    bool canSpawn; //boolean for spawning
+    bool canSpawnAsteroid; //boolean for spawning asteroids
+    bool canSpawnAlien; //boolean for spawning aliens
 
     public int score; //public player score for testing
     public int lives; //lives for player
@@ -60,27 +61,28 @@ public class GameManager : MonoBehaviour
         timer -= Time.deltaTime; //set time that is subtracted by time that has passed
         if (timer < 1) 
         {
-            canSpawn = true; //initialize spawn to true
+            canSpawnAsteroid = true; //initialize asteroid spawn spawn to true
+            canSpawnAlien = true; //initialize alien spawner to true
             timer = waitTime; //set timer to cooldown
         }
         if (maxAsteroids > numberOfAsteroids)  //if the number of asteroids is less than the max amount of asteroids
         {
-            if (canSpawn == true) //and if cooldown is up
+            if (canSpawnAsteroid == true) //and if cooldown is up
             {
                 int random = Random.Range(0, spawnPoints.Count); //choose randomly from list of spawn points
-                GameObject asteroid = Instantiate(asteroidPrefab, spawnPoints[random].position, spawnPoints[random].rotation);
-                numberOfAsteroids++;
-                canSpawn =  false;
+                GameObject asteroid = Instantiate(asteroidPrefab, spawnPoints[random].position, spawnPoints[random].rotation); //spawn at a random spawner
+                numberOfAsteroids++; //add to asteroid count
+                canSpawnAsteroid =  false; //change can spawn to false
             }
         }
         if (maxAliens > numberOfAliens)  //if the number of aliens is less than the max amount aliens
         {
-            if (canSpawn == true) //and if cooldown is up
+            if (canSpawnAlien == true) //and if cooldown is up
             {
                 int random = Random.Range(0, alienSpawn.Count); //choose randomly from list of spawn points
                 GameObject alien = Instantiate(alienPrefab, spawnPoints[random].position, spawnPoints[random].rotation);
                 numberOfAliens++;
-                canSpawn = false;
+                canSpawnAlien = false;
             }
         }
     }

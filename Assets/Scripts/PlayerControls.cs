@@ -124,24 +124,24 @@ public class PlayerControls : MonoBehaviour
 
     void Respawn() 
     {
-        rb.velocity = Vector2.zero; //remove velocity
-        transform.position = Vector2.zero; //reset vector
-        SpriteRenderer sr = GetComponent<SpriteRenderer>(); //store renderer
-        sr.enabled = true;
-        sr.color = invColor;
+        rb.velocity = Vector3.zero; //remove velocity
+        transform.position = Vector3.zero; //reset vector
+        SpriteRenderer sr = GetComponent<SpriteRenderer>(); //get and store renderer
+        sr.enabled = true; //enable it
+        sr.color = invColor; //set color to invulnerable color
         Invoke("Invulnerable", 3f); //waits to put the collider back
     }
 
     void Invulnerable() 
     {
         GetComponent<Collider2D>().enabled = true; //enable collider
-        GetComponent<SpriteRenderer>().color = normalColor;
+        GetComponent<SpriteRenderer>().color = normalColor; //change color back to normal
+        GetComponent<LaserScript>().enabled = true; //enable firing
     }
 
     //Player collision function
     private void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log(col.relativeVelocity.magnitude);
         if (col.relativeVelocity.magnitude > terminalForce)
         {
             GameManager.instance.lives--; //decrement lives on collision
@@ -151,6 +151,7 @@ public class PlayerControls : MonoBehaviour
             //respawn - new life
             GetComponent<SpriteRenderer>().enabled = false; //disable renderer
             GetComponent<Collider2D>().enabled = false; //disable collider
+            GetComponent<LaserScript>().enabled = false; //disable firing
             Invoke("Respawn", 3f);
 
             if (GameManager.instance.lives <= 0) //if lives are less than or equal to 0 game over

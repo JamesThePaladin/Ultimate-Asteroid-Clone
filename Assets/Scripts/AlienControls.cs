@@ -6,7 +6,7 @@ public class AlienControls : MonoBehaviour
 {
     public GameManager instance;
     public Rigidbody2D rb; //alien rigidbody
-    public Transform targetLock; //player position
+    public Transform playerPos; //for player position
     public Transform alienPos; //alien position
     public float homingSpeed; //var for chase speed
     public int points; //how many points asteroid is worth
@@ -19,15 +19,20 @@ public class AlienControls : MonoBehaviour
     public float screenLeft; //hold screen boundary -x
 
 
-    // Start is called before the first frame update
-    void Start()
+    
+    private void Awake()
     {
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
         }
         //get transform of player
-        targetLock = player.GetComponent<Transform>();
+        playerPos = player.GetComponent<Transform>();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+
     }
 
     // Update is called once per frame
@@ -59,8 +64,8 @@ public class AlienControls : MonoBehaviour
     private void FixedUpdate()
     {
         //enemy ship chases player
-        float xDelta = targetLock.localPosition.x - alienPos.localPosition.x;
-        float yDelta = targetLock.localPosition.y - alienPos.localPosition.y;
+        float xDelta = playerPos.localPosition.x - alienPos.localPosition.x;
+        float yDelta = playerPos.localPosition.y - alienPos.localPosition.y;
         rb.AddForce(new Vector3(xDelta * homingSpeed, yDelta * homingSpeed));
     }
 
@@ -78,15 +83,15 @@ public class AlienControls : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    private void OnCollisionEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        if (CompareTag("Player"))
+        if (other.gameObject)
         {
+            //explosion particle effect
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
-            //destroy yourself
-            Destroy(other.gameObject);
-            Destroy(thisAlien);
+            ///destroy current instance
+            Destroy(this.gameObject);
         }
     }
 }

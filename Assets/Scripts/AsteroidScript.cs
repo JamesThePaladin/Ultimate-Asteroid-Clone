@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class AsteroidScript : MonoBehaviour
 {
-    public GameManager instance;
+    public GameManager instance; //game manager instance
     public GameObject thisAsteroid; //holds this asteroid
-    public float maxThrust; // hold asteroid max thrust
     public float maxTorque; // hold asteroid max torque
     public Rigidbody2D rb; //rigidbody var
     public float screenTop; //hold screen boundary +y
@@ -19,20 +18,27 @@ public class AsteroidScript : MonoBehaviour
     public int points; //how many points asteroid is worth
     public GameObject explosion;
     public GameObject player; //variable for player reference
+    public Transform playerPos; //for player position
+    public Transform asteroidPos; //asteroid position
+    public float startSpeed; //var for chase speed
+
+    private void Awake()
+    {
+        if (player == null) //if player slot is empty
+        {
+            player = GameObject.FindWithTag("Player"); //fill it with player
+        }
+
+        playerPos = player.GetComponent<Transform>(); //get player transform
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player");
-        }
-
-        // add a random amount of torque + thrust to asteroid
-        Vector2 thrust = new Vector2(Random.Range(-maxThrust, maxThrust), Random.Range(-maxThrust, maxThrust));
-        float torque = Random.Range(-maxTorque, maxTorque);
-
-        rb.AddForce(thrust); //apply thrust to rigid body as a force
+        float xDelta = playerPos.localPosition.x - asteroidPos.localPosition.x; //get x vector distance
+        float yDelta = playerPos.localPosition.y - asteroidPos.localPosition.y; //get y vector distance
+        rb.AddForce(new Vector3(xDelta * startSpeed, yDelta * startSpeed)); //add our distance as force to rb
+        float torque = Random.Range(-maxTorque, maxTorque); //add random rotation
         rb.AddTorque(torque); //apply torque to rigidbody to rotate
        
     }
@@ -93,21 +99,37 @@ public class AsteroidScript : MonoBehaviour
             //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
-            //destroy current asteroid
+            //destroy the asteroid
             Destroy(this.gameObject);
 
         }
        
     }
-    private void OnCollisionEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        if (CompareTag("Player"))
+        if (gameObject.tag == "Player" | gameObject.tag == "Enemy") 
         {
+            if (asteroidSize == 3)
+            {
+                //spawn 2 medium asteroids at the same spot of the large that was destroyed
+                Instantiate(asteroidMedium, transform.position, transform.rotation);
+                Instantiate(asteroidMedium, transform.position, transform.rotation);
+            }
+            else if (asteroidSize == 2) //else if its medium
+            {
+                //spawn 2 medium asteroids at the same spot of the large that was destroyed
+                Instantiate(asteroidSmall, transform.position, transform.rotation);
+                Instantiate(asteroidSmall, transform.position, transform.rotation);
+            }
+            else if (asteroidSize == 1) //else if its small
+            {
+                //give player points
+            }
+
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
-            //destroy yourself
-            Destroy(other.gameObject);
-            Destroy(thisAsteroid);
+            //destroy the asteroid
+            Destroy(this.gameObject);
         }
     }
 }

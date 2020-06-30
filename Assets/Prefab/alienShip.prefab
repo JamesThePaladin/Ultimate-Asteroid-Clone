@@ -98,11 +98,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instance: {fileID: 0}
   rb: {fileID: 4934663483727086077}
-  targetLock: {fileID: 0}
+  playerPos: {fileID: 0}
   alienPos: {fileID: 2540979818292609616}
   homingSpeed: 0.5
   points: 100
-  player: {fileID: 9211941441081648094, guid: 27a3f361c1283ab49acf98a4142ab519, type: 3}
+  player: {fileID: 0}
   explosion: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
   thisAlien: {fileID: 2089072404690297624}
   screenTop: 10.42
