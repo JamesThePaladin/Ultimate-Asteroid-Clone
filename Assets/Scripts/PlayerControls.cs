@@ -41,33 +41,9 @@ public class PlayerControls : MonoBehaviour
         // shift "dodge" function, it really just makes you teleport but I'll leave it for now
         if (Input.GetKey("left shift") | Input.GetKey("right shift"))
         {
-            if (Input.GetKeyDown("w") | Input.GetKeyDown("up"))
-            {
-                Vector3 myVector = new Vector3(0, 1, 0); // create vector to add
-                myVector = myVector.normalized; // You could also call the function myVector.Normalize();
-                tf.position += (myVector * thrust); // change position and add magnitude
-            }
-
-            if (Input.GetKeyDown("a") | Input.GetKeyDown("left"))
-            {
-                Vector3 myVector = new Vector3(-1, 0, 0); // create vector to add
-                myVector = myVector.normalized; // You could also call the function myVector.Normalize();
-                tf.position += (myVector * thrust); // change position and add magnitude
-            }
-
-            if (Input.GetKeyDown("s") | Input.GetKeyDown("down"))
-            {
-                Vector3 myVector = new Vector3(0, -1, 0); // create vector to add
-                myVector = myVector.normalized; // You could also call the function myVector.Normalize();
-                tf.position += (myVector * thrust); // change position and add magnitude
-            }
-
-            if (Input.GetKeyDown("d") | Input.GetKeyDown("right"))
-            {
-                Vector3 myVector = new Vector3(1, 0, 0); // create vector to add
-                myVector = myVector.normalized; // You could also call the function myVector.Normalize();
-                tf.position += (myVector * thrust); // change position and add magnitude
-            }
+            thrustInput = Input.GetAxis("Vertical") * 5; //get forward and reverse input
+            turnInput = Input.GetAxis("Horizontal") * 6; //get turn input
+            transform.Rotate(Vector3.forward * turnInput * turnThrust * Time.deltaTime); 
         }
 
         //check for keyboard input
@@ -76,6 +52,19 @@ public class PlayerControls : MonoBehaviour
             thrustInput = Input.GetAxis("Vertical"); //get forward and reverse input
             turnInput = Input.GetAxis("Horizontal"); //get turn input
             transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * turnThrust);
+        }
+
+        //Return player to (0, 0, 0)
+        if (Input.GetKeyDown("u"))
+        {
+            rb.velocity = Vector2.zero; //remove velocity
+            tf.position = new Vector3(0, 0, 0);
+        }
+
+        //exit application with escape key
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
         }
 
         //screen wrapping
@@ -99,19 +88,6 @@ public class PlayerControls : MonoBehaviour
         
         //set player transform to new Pos
         transform.position = newPos;
-
-        //Return player to (0, 0, 0)
-        if (Input.GetKeyDown("u"))
-        {
-            rb.velocity = Vector2.zero; //remove velocity
-            tf.position = new Vector3(0, 0, 0);
-        }
-
-        //exit application with escape key
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
     }
 
     //update on a fixed time interval for consistency

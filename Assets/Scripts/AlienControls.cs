@@ -59,14 +59,16 @@ public class AlienControls : MonoBehaviour
 
         //set asteroid transform to new Pos
         transform.position = newPos;
+
+        //enemy ship chases player
+        float xDelta = playerPos.localPosition.x - alienPos.localPosition.x;
+        float yDelta = playerPos.localPosition.y - alienPos.localPosition.y;
+        rb.AddForce(new Vector3(xDelta * homingSpeed * Time.deltaTime, yDelta * homingSpeed * Time.deltaTime));
     }
 
     private void FixedUpdate()
     {
-        //enemy ship chases player
-        float xDelta = playerPos.localPosition.x - alienPos.localPosition.x;
-        float yDelta = playerPos.localPosition.y - alienPos.localPosition.y;
-        rb.AddForce(new Vector3(xDelta * homingSpeed, yDelta * homingSpeed));
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)

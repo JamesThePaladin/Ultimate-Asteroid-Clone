@@ -7,19 +7,23 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance; //variable that holds this instance of the GameManager
     private PlayerControls playerControls; //to hold toggle
+
     public List<Transform> spawnPoints; //asteroid spawn point index
-    public List<Transform> alienSpawn;  //alien spawn point index
     public GameObject asteroidPrefab; //for asteroids
     public int numberOfAsteroids; //for number of asteroids
     public int maxAsteroids; //for number of asteroids
+    bool canSpawnAsteroid; //boolean for spawning asteroids
+
+    public GameObject alienSpawn;  //alien spawn point circle
+    public Transform alienTf; //alien spawner transform
     public GameObject alienPrefab; //for aliens
     public int numberOfAliens; //for number of asteroids
     public int maxAliens; //for number of asteroids
-    float timer; //timer for spawning
-    public float waitTime; //wait time for spawning 
-    bool canSpawnAsteroid; //boolean for spawning asteroids
     bool canSpawnAlien; //boolean for spawning aliens
 
+    float timer; //timer for spawning
+    public float waitTime; //wait time for spawning 
+    
     public int score; //public player score for testing
     public int lives; //lives for player
     public Text scoreText; //reference to score text
@@ -43,7 +47,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerControls = GetComponent<PlayerControls>();
+        alienSpawn = GameObject.FindWithTag("alienSpawner"); //get alien spawn object
+        playerControls = GetComponent<PlayerControls>(); //get player controls script
         scoreText.text = "" + score;//update score text in UI
         livesText.text = "Lives: " + lives;//update lives in UI
     }
@@ -51,12 +56,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //toggle cotrols on/off
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            playerControls.enabled = !playerControls.enabled; //inverse component state
-            Debug.Log("controls have been toggled"); //for debugging
-        }
+        alienTf = alienSpawn.GetComponent<Transform>(); //get alien spawn transform
 
         timer -= Time.deltaTime; //set time that is subtracted by time that has passed
         if (timer < 1) 
@@ -79,11 +79,17 @@ public class GameManager : MonoBehaviour
         {
             if (canSpawnAlien == true) //and if cooldown is up
             {
-                int random = Random.Range(0, alienSpawn.Count); //choose randomly from list of spawn points
-                GameObject alien = Instantiate(alienPrefab, spawnPoints[random].position, spawnPoints[random].rotation); //spawn at that points location 
+                GameObject alien = Instantiate(alienPrefab, alienTf.position, alienTf.rotation); //spawn at that points location 
                 numberOfAliens++; //increment the number of aliens
                 canSpawnAlien = false; //set spawning to false
             }
+        }
+
+        //toggle cotrols on/off
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            playerControls.enabled = !playerControls.enabled; //inverse component state
+            Debug.Log("controls have been toggled"); //for debugging
         }
     }
 

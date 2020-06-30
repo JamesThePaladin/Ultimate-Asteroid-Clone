@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpawnRandomizer : MonoBehaviour
 {
-    private GameManager gm; //reference for game manager
     public GameObject alienSpawners; // to hold our alien spawner objects
     public Transform tf; //for the spawners transform component
 
@@ -23,6 +22,6 @@ public class SpawnRandomizer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        tf.position = Random.insideUnitSphere * 2;
+        tf.position = Random.insideUnitSphere * 10;
     }
 }
