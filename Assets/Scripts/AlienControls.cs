@@ -74,7 +74,10 @@ public class AlienControls : MonoBehaviour
         //check to see if collision is the laser
         if (other.CompareTag("laser"))
         {
-            Destroy(other.gameObject); //destroy the laser
+            //destroy the laser
+            Destroy(other.gameObject);
+            //lower number of aliens
+            GameManager.instance.numberOfAliens--;
             //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
@@ -87,6 +90,8 @@ public class AlienControls : MonoBehaviour
     {
         if (gameObject)
         {
+            //lower number of aliens
+            GameManager.instance.numberOfAliens--;
             //explosion particle effect
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);

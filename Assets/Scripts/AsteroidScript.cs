@@ -77,39 +77,7 @@ public class AsteroidScript : MonoBehaviour
         {
             Destroy(other.gameObject); //destroy the laser
             //check the size of the asteroid and spawn the next smaller size
-            if (asteroidSize == 3) 
-            {
-                //spawn 2 medium asteroids at the same spot of the large that was destroyed
-                Instantiate(asteroidMedium, transform.position, transform.rotation);
-                Instantiate(asteroidMedium, transform.position, transform.rotation);
-            }
-            else if (asteroidSize == 2) //else if its medium
-            {
-                //spawn 2 medium asteroids at the same spot of the large that was destroyed
-                Instantiate(asteroidSmall, transform.position, transform.rotation);
-                Instantiate(asteroidSmall, transform.position, transform.rotation);
-            }
-            else if (asteroidSize == 1) //else if its small
-            {
-                //give player points
-            }
-            //tell the player to score points
-            GameManager.instance.SendMessage("ScorePoints", points);
-
-            //make an explosion
-            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
-            Destroy(newExplosion, 3f);
-            //destroy the asteroid
-            Destroy(this.gameObject);
-
-        }
-       
-    }
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject)
-        {
-            //if (asteroidSize == 3)
+            //if (asteroidSize == 3) 
             //{
             //    //spawn 2 medium asteroids at the same spot of the large that was destroyed
             //    Instantiate(asteroidMedium, transform.position, transform.rotation);
@@ -125,10 +93,32 @@ public class AsteroidScript : MonoBehaviour
             //{
             //    //give player points
             //}
+            //tell the player to score points
+            GameManager.instance.SendMessage("ScorePoints", points);
+            //lower number of asteroids
+            GameManager.instance.numberOfAsteroids--;
+
             //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
             //destroy the asteroid
+            Destroy(this.gameObject);
+            
+
+        }
+       
+    }
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject)
+        {
+            //lower the number of asteroids
+            GameManager.instance.numberOfAsteroids--;
+            //make an explosion
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(newExplosion, 3f);
+            //destroy the asteroid
+            thisAsteroid.SetActive(false);
             Destroy(this.gameObject);
         }
     }

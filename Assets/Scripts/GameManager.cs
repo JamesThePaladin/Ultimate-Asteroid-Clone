@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             playerControls.enabled = !playerControls.enabled; //inverse component state
-            Debug.Log("controls have been toggled"); //
+            Debug.Log("controls have been toggled"); //for debugging
         }
 
         timer -= Time.deltaTime; //set time that is subtracted by time that has passed
@@ -70,9 +70,9 @@ public class GameManager : MonoBehaviour
             if (canSpawnAsteroid == true) //and if cooldown is up
             {
                 int random = Random.Range(0, spawnPoints.Count); //choose randomly from list of spawn points
-                GameObject asteroid = Instantiate(asteroidPrefab, spawnPoints[random].position, spawnPoints[random].rotation); //spawn at a random spawner
-                numberOfAsteroids++; //add to asteroid count
-                canSpawnAsteroid =  false; //change can spawn to false
+                GameObject asteroid = Instantiate(asteroidPrefab, spawnPoints[random].position, spawnPoints[random].rotation); //spawn at that points location
+                numberOfAsteroids++; //increment the asteroid count
+                canSpawnAsteroid =  false; //change spawning to false
             }
         }
         if (maxAliens > numberOfAliens)  //if the number of aliens is less than the max amount aliens
@@ -80,16 +80,17 @@ public class GameManager : MonoBehaviour
             if (canSpawnAlien == true) //and if cooldown is up
             {
                 int random = Random.Range(0, alienSpawn.Count); //choose randomly from list of spawn points
-                GameObject alien = Instantiate(alienPrefab, spawnPoints[random].position, spawnPoints[random].rotation);
-                numberOfAliens++;
-                canSpawnAlien = false;
+                GameObject alien = Instantiate(alienPrefab, spawnPoints[random].position, spawnPoints[random].rotation); //spawn at that points location 
+                numberOfAliens++; //increment the number of aliens
+                canSpawnAlien = false; //set spawning to false
             }
         }
     }
 
-    void ScorePoints(int addPoints)
+    //takes in points from other objects and adds it to the player's score
+    void ScorePoints(int addPoints) 
     {
-        score += addPoints;
+        score += addPoints; //add points to player score
         scoreText.text = "" + score;//update score text in UI
     }
 }

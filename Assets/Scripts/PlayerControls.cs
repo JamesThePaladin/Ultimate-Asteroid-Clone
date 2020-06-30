@@ -136,7 +136,6 @@ public class PlayerControls : MonoBehaviour
     {
         GetComponent<Collider2D>().enabled = true; //enable collider
         GetComponent<SpriteRenderer>().color = normalColor; //change color back to normal
-        GetComponent<LaserScript>().enabled = true; //enable firing
     }
 
     //Player collision function
@@ -146,13 +145,13 @@ public class PlayerControls : MonoBehaviour
         {
             GameManager.instance.lives--; //decrement lives on collision
             GameManager.instance.livesText.text = "Lives: " + GameManager.instance.lives;//update lives in UI
-            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
-            Destroy(newExplosion, 3f);
-            //respawn - new life
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);//instantiate and explosion at player position
+            Destroy(newExplosion, 3f); //destroy the new explosion after 3 seconds
+
+            //respawn
             GetComponent<SpriteRenderer>().enabled = false; //disable renderer
             GetComponent<Collider2D>().enabled = false; //disable collider
-            GetComponent<LaserScript>().enabled = false; //disable firing
-            Invoke("Respawn", 3f);
+            Invoke("Respawn", 3f); //call respawn 3 seconds after collision
 
             if (GameManager.instance.lives <= 0) //if lives are less than or equal to 0 game over
             {
