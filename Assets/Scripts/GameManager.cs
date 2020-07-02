@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance; //variable that holds this instance of the GameManager
-    private PlayerControls playerControls; //to hold toggle
+    public PlayerControls playerControls; //to hold toggle
 
     public List<Transform> spawnPoints; //asteroid spawn point index
     public GameObject asteroidPrefab; //for asteroids
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     bool canSpawnAlien; //boolean for spawning aliens
 
     float timer; //timer for spawning
-    public float waitTime; //wait time for spawning 
+    public float spawnCoolDownTime; //cool down time for spawning 
     
     public int score; //public player score for testing
     public int lives; //lives for player
@@ -32,38 +32,56 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null) // if instance is empty
+        // if instance is empty
+        if (instance == null) 
         {
-            instance = this; // store THIS instance of the class in the instance variable
-            DontDestroyOnLoad(this.gameObject); //keep this instance of game manager when loading new scenes
+            //store THIS instance of the class in the instance variable
+            instance = this;
+            //keep this instance of game manager when loading new scenes
+            DontDestroyOnLoad(this.gameObject); 
         }
         else 
         {
-            Destroy(this.gameObject); // delete the new game manager attempting to store itself, there can only be one.
-            Debug.Log("Warning: A second game manager was detected and destrtoyed"); // display message in the console to inform of its demise
+            //delete the new game manager attempting to store itself, there can only be one.
+            Destroy(this.gameObject);
+            //display message in the console to inform of its demise
+            Debug.Log("Warning: A second game manager was detected and destrtoyed"); 
         }
-        score = 0; //initialize score
+
+        //initialize score
+        score = 0; 
     }
-    // Start is called before the first frame update
+    //Start is called before the first frame update
     void Start()
     {
-        alienSpawn = GameObject.FindWithTag("alienSpawner"); //get alien spawn object
-        playerControls = GetComponent<PlayerControls>(); //get player controls script
-        scoreText.text = "" + score;//update score text in UI
-        livesText.text = "Lives: " + lives;//update lives in UI
+        //get alien spawn object
+        alienSpawn = GameObject.FindWithTag("alienSpawner");
+        //get player controls script
+        playerControls = GameObject.FindObjectOfType<PlayerControls>();
+        //update score text in UI
+        scoreText.text = "" + score;
+        //update lives in UI
+        livesText.text = "Lives: " + lives;
     }
 
     // Update is called once per frame
     void Update()
     {
-        alienTf = alienSpawn.GetComponent<Transform>(); //get alien spawn transform
+        //get alien spawn transform
+        alienTf = alienSpawn.GetComponent<Transform>();
 
-        timer -= Time.deltaTime; //set time that is subtracted by time that has passed
+        //subtract the time since the last frame from timer
+        timer -= Time.deltaTime; 
+
+        //if timer gets below 1
         if (timer < 1) 
         {
-            canSpawnAsteroid = true; //initialize asteroid spawn spawn to true
-            canSpawnAlien = true; //initialize alien spawner to true
-            timer = waitTime; //set timer to cooldown
+            //set asteroid spawn to true
+            canSpawnAsteroid = true;
+            //set alien spawn to true
+            canSpawnAlien = true;
+            //set timer to cooldown
+            timer = spawnCoolDownTime; 
         }
         if (maxAsteroids > numberOfAsteroids)  //if the number of asteroids is less than the max amount of asteroids
         {
@@ -79,24 +97,68 @@ public class GameManager : MonoBehaviour
         {
             if (canSpawnAlien == true) //and if cooldown is up
             {
-                GameObject alien = Instantiate(alienPrefab, alienTf.position, alienTf.rotation); //spawn at that points location 
-                numberOfAliens++; //increment the number of aliens
-                canSpawnAlien = false; //set spawning to false
+                //spawn at that points location
+                GameObject alien = Instantiate(alienPrefab, alienTf.position, alienTf.rotation); 
+                //increment the number of aliens
+                numberOfAliens++; 
+                //set spawning to false
+                canSpawnAlien = false;
             }
         }
 
         //toggle cotrols on/off
         if (Input.GetKeyDown(KeyCode.P))
         {
-            playerControls.enabled = !playerControls.enabled; //inverse component state
-            Debug.Log("controls have been toggled"); //for debugging
+            //inverse component state
+            playerControls.enabled = !playerControls.enabled;
+            //for debugging
+            Debug.Log("controls have been toggled"); 
         }
     }
 
     //takes in points from other objects and adds it to the player's score
     void ScorePoints(int addPoints) 
     {
-        score += addPoints; //add points to player score
-        scoreText.text = "" + score;//update score text in UI
+        //add points to player score
+        score += addPoints;
+        //update score text in UI
+        scoreText.text = "" + score;
+    }
+
+    public void LoseLife() 
+    {
+        //minus a life
+        lives--;
+        //update lives in UI
+        livesText.text = "Lives: " + GameManager.instance.lives;
+
+        //if lives are less than or equal to 0 game over
+        if (lives <= 0) 
+        {
+            Application.Quit();
+        }
+    }
+    public void Respawn()
+    {
+        //remove velocity
+        playerControls.rb.velocity = Vector3.zero;
+        //reset vector
+        playerControls.gameObject.transform.position = Vector3.zero;
+        //get and store renderer
+        SpriteRenderer sr = playerControls.gameObject.GetComponent<SpriteRenderer>();
+        //enable it
+        sr.enabled = true;
+        //set color to invulnerable color
+        sr.color = playerControls.invColor;
+        //waits to put the collider back
+        Invoke("Invulnerable", 3f); 
+    }
+
+    void Invulnerable()
+    {
+        //enable collider
+        playerControls.gameObject.GetComponent<Collider2D>().enabled = true;
+        //change color back to normal
+        playerControls.gameObject.GetComponent<SpriteRenderer>().color = playerControls.normalColor; 
     }
 }

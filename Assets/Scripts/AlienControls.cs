@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AlienControls : MonoBehaviour
 {
-    public GameManager instance;
+    private GameManager instance;
     public Rigidbody2D rb; //alien rigidbody
     public Transform playerPos; //for player position
     public Transform alienPos; //alien position
@@ -22,19 +22,16 @@ public class AlienControls : MonoBehaviour
     
     private void Awake()
     {
+        //check if player is empty
         if (player == null)
         {
+            //if not fill it with the game object tagged player
             player = GameObject.FindWithTag("Player");
         }
         //get transform of player
         playerPos = player.GetComponent<Transform>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
+   
     // Update is called once per frame
     void Update()
     {
@@ -57,18 +54,16 @@ public class AlienControls : MonoBehaviour
             newPos.x = screenRight;
         }
 
-        //set asteroid transform to new Pos
+        //set alien transform to new Pos
         transform.position = newPos;
-
-        //enemy ship chases player
-        float xDelta = playerPos.localPosition.x - alienPos.localPosition.x;
-        float yDelta = playerPos.localPosition.y - alienPos.localPosition.y;
-        rb.AddForce(new Vector3(xDelta * homingSpeed * Time.deltaTime, yDelta * homingSpeed * Time.deltaTime));
     }
 
     private void FixedUpdate()
     {
-        
+        //enemy ship chases player
+        float xDelta = playerPos.localPosition.x - alienPos.localPosition.x;
+        float yDelta = playerPos.localPosition.y - alienPos.localPosition.y;
+        rb.AddForce(new Vector3(xDelta * homingSpeed * Time.deltaTime, yDelta * homingSpeed * Time.deltaTime));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -82,7 +77,9 @@ public class AlienControls : MonoBehaviour
             GameManager.instance.numberOfAliens--;
             //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            //destroy it after 3 seconds
             Destroy(newExplosion, 3f);
+            //send points to add
             GameManager.instance.SendMessage("ScorePoints", points);
             //destroy current instance
             Destroy(this.gameObject);
@@ -96,6 +93,7 @@ public class AlienControls : MonoBehaviour
             GameManager.instance.numberOfAliens--;
             //explosion particle effect
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            //destroy it after 3 seconds
             Destroy(newExplosion, 3f);
             ///destroy current instance
             Destroy(this.gameObject);

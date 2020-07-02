@@ -6,6 +6,7 @@ public class SpawnRandomizer : MonoBehaviour
 {
     public GameObject alienSpawners; // to hold our alien spawner objects
     public Transform tf; //for the spawners transform component
+    public float spawnRadius; //spawn radius for aliens
 
     // Start is called before the first frame update
     void Start()
@@ -13,15 +14,9 @@ public class SpawnRandomizer : MonoBehaviour
         //get the transform component
         tf = GetComponent<Transform>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
-        tf.position = Random.insideUnitSphere * 10;
+        //change spawner position
+        tf.position = Random.insideUnitCircle * spawnRadius;
     }
 }

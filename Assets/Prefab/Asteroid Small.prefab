@@ -135,6 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instance: {fileID: 0}
   thisAsteroid: {fileID: 3888285266124317997}
+  thrust: 3
   maxTorque: 2000
   rb: {fileID: 4708782280707257747}
   screenTop: 10.3

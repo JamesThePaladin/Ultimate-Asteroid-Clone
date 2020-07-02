@@ -4,23 +4,26 @@ using UnityEngine;
 
 public class AsteroidScript : MonoBehaviour
 {
-    public GameManager instance; //game manager instance
     public GameObject thisAsteroid; //holds this asteroid
-    public float maxTorque; // hold asteroid max torque
+    public Transform asteroidPos; //asteroid position
     public Rigidbody2D rb; //rigidbody var
+    public int asteroidSize; //for asteroid breaking 3 = large, 2 = medium, 1 = small
+    public GameObject asteroidMedium; //reference to medium size prefab
+    public GameObject asteroidSmall; //reference to small size prefab
+    public float thrust; //for spawning speed
+    public float maxTorque; // hold asteroid max torque
+    public float startSpeed; //var for chase speed
+    public int points; //how many points asteroid is worth
+    public GameObject explosion; //explosion for asteroid
+
     public float screenTop; //hold screen boundary +y
     public float screenBottom; //hold screen boundary -y
     public float screenRight; //hold screen boundary x
     public float screenLeft; //hold screen boundary -x
-    public int asteroidSize; //for asteroid breaking 3 = large, 2 = medium, 1 = small
-    public GameObject asteroidMedium; //reference to medium size prefab
-    public GameObject asteroidSmall; //reference to small size prefab
-    public int points; //how many points asteroid is worth
-    public GameObject explosion;
+
+    private GameManager instance; //game manager instance
     public GameObject player; //variable for player reference
     public Transform playerPos; //for player position
-    public Transform asteroidPos; //asteroid position
-    public float startSpeed; //var for chase speed
 
     private void Awake()
     {
@@ -77,22 +80,22 @@ public class AsteroidScript : MonoBehaviour
         {
             Destroy(other.gameObject); //destroy the laser
             //check the size of the asteroid and spawn the next smaller size
-            //if (asteroidSize == 3) 
-            //{
-            //    //spawn 2 medium asteroids at the same spot of the large that was destroyed
-            //    Instantiate(asteroidMedium, transform.position, transform.rotation);
-            //    Instantiate(asteroidMedium, transform.position, transform.rotation);
-            //}
-            //else if (asteroidSize == 2) //else if its medium
-            //{
-            //    //spawn 2 medium asteroids at the same spot of the large that was destroyed
-            //    Instantiate(asteroidSmall, transform.position, transform.rotation);
-            //    Instantiate(asteroidSmall, transform.position, transform.rotation);
-            //}
-            //else if (asteroidSize == 1) //else if its small
-            //{
-            //    //give player points
-            //}
+            if (asteroidSize == 3)
+            {
+                //spawn 2 medium asteroids at the same spot of the large that was destroyed
+                Instantiate(asteroidMedium, transform.position, transform.rotation);
+                Instantiate(asteroidMedium, transform.position, transform.rotation);
+            }
+            else if (asteroidSize == 2) //else if its medium
+            {
+                //spawn 2 medium asteroids at the same spot of the large that was destroyed
+                Instantiate(asteroidSmall, transform.position, transform.rotation);
+                Instantiate(asteroidSmall, transform.position, transform.rotation);
+            }
+            else if (asteroidSize == 1) //else if its small
+            {
+                //give player points
+            }
             //tell the player to score points
             GameManager.instance.SendMessage("ScorePoints", points);
             //lower number of asteroids
@@ -103,22 +106,21 @@ public class AsteroidScript : MonoBehaviour
             Destroy(newExplosion, 3f);
             //destroy the asteroid
             Destroy(this.gameObject);
-            
-
         }
        
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject)
+        //if game object is not an asteroid
+        if (!other.gameObject.CompareTag("Asteroid"))
         {
+            Debug.Log("We've been hit!");
             //lower the number of asteroids
             GameManager.instance.numberOfAsteroids--;
             //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
             //destroy the asteroid
-            thisAsteroid.SetActive(false);
             Destroy(this.gameObject);
         }
     }

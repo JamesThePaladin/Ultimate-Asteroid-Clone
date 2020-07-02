@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerControls : MonoBehaviour
 {
-    public GameManager instance; //var for gameManager
+    private GameManager instance; //var for gameManager
     public GameObject thisPlayer; //variable to store GameObject
     public Transform tf; // A variable to hold our Transform component
     public Rigidbody2D rb; //Rigidbody2D var
@@ -16,18 +16,14 @@ public class PlayerControls : MonoBehaviour
     private float thrustInput; //to set thrust inputs
     private float turnInput; //to set turn input
     public float terminalForce; //for death force
+    public Color invColor; //invincibility color
+    public Color normalColor;//normal color tor return to
     public GameObject explosion; //holds our explosion effect
-
-
 
     public float screenTop; //hold screen boundary +y
     public float screenBottom; //hold screen boundary -y
     public float screenRight; //hold screen boundary x
     public float screenLeft; //hold screen boundary -x
-
-    public Color invColor;
-    public Color normalColor;
-
 
     // Start is called before the first frame update
     void Start()
@@ -38,12 +34,12 @@ public class PlayerControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // shift "dodge" function, it really just makes you teleport but I'll leave it for now
+        // shift "boost" function
         if (Input.GetKey("left shift") | Input.GetKey("right shift"))
         {
             thrustInput = Input.GetAxis("Vertical") * 5; //get forward and reverse input
             turnInput = Input.GetAxis("Horizontal") * 6; //get turn input
-            transform.Rotate(Vector3.forward * turnInput * turnThrust * Time.deltaTime); 
+            transform.Rotate(transform.forward * turnInput * turnThrust * Time.deltaTime); //rotate sprite 
         }
 
         //check for keyboard input
@@ -51,13 +47,15 @@ public class PlayerControls : MonoBehaviour
         {
             thrustInput = Input.GetAxis("Vertical"); //get forward and reverse input
             turnInput = Input.GetAxis("Horizontal"); //get turn input
-            transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * turnThrust);
+            transform.Rotate(transform.forward * turnInput * turnThrust * Time.deltaTime); //rotate sprite
         }
 
         //Return player to (0, 0, 0)
         if (Input.GetKeyDown("u"))
         {
-            rb.velocity = Vector2.zero; //remove velocity
+            //remove velocity
+            rb.velocity = Vector2.zero;
+            //set position to origin
             tf.position = new Vector3(0, 0, 0);
         }
 
@@ -85,7 +83,7 @@ public class PlayerControls : MonoBehaviour
         {
             newPos.x = screenRight;
         }
-        
+
         //set player transform to new Pos
         transform.position = newPos;
     }
@@ -94,23 +92,7 @@ public class PlayerControls : MonoBehaviour
     private void FixedUpdate()
     {
         //apply thrust
-        rb.AddRelativeForce(Vector2.up * thrustInput * thrust);
-    }
-
-    void Respawn() 
-    {
-        rb.velocity = Vector2.zero; //remove velocity
-        transform.position = Vector2.zero; //reset vector
-        SpriteRenderer sr = GetComponent<SpriteRenderer>(); //get and store renderer
-        sr.enabled = true; //enable it
-        sr.color = invColor; //set color to invulnerable color
-        Invoke("Invulnerable", 3f); //waits to put the collider back
-    }
-
-    void Invulnerable() 
-    {
-        GetComponent<Collider2D>().enabled = true; //enable collider
-        GetComponent<SpriteRenderer>().color = normalColor; //change color back to normal
+        rb.AddForce(transform.up * thrustInput * thrust);
     }
 
     //Player collision function
@@ -118,19 +100,20 @@ public class PlayerControls : MonoBehaviour
     {
         if (col.relativeVelocity.magnitude > terminalForce)
         {
-            GameManager.instance.lives--; //decrement lives on collision
-            GameManager.instance.livesText.text = "Lives: " + GameManager.instance.lives;//update lives in UI
+            GameManager.instance.LoseLife();
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);//instantiate and explosion at player position
             Destroy(newExplosion, 3f); //destroy the new explosion after 3 seconds
 
             //respawn
             GetComponent<SpriteRenderer>().enabled = false; //disable renderer
             GetComponent<Collider2D>().enabled = false; //disable collider
-            Invoke("Respawn", 3f); //call respawn 3 seconds after collision
+            StartCoroutine(respawnTimer());
 
-            if (GameManager.instance.lives <= 0) //if lives are less than or equal to 0 game over
+            //wait timer for respawn
+            IEnumerator respawnTimer() 
             {
-                Application.Quit();
+                yield return new WaitForSeconds(3f);
+                GameManager.instance.Respawn();
             }
         }
     }

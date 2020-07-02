@@ -4,24 +4,20 @@ using UnityEngine;
 
 public class LaserScript : MonoBehaviour
 {
-    public float laserForce; //laser speed
     public GameObject laser; //var for laser
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
+    public float laserForce; //laser speed
+    
     // Update is called once per frame
     void Update()
     {
-        //check for fire input and make bullets
+        //check for fire input
         if (Input.GetButtonDown("Fire1"))
         {
+            //spawn laser at the same positiona and rotation as the object this is attached to
             GameObject newLaser = Instantiate(laser, transform.position, transform.rotation);
-            newLaser.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * laserForce);
-            newLaser.GetComponent<Transform>();
+            //push the rigid body of the new laser away from our up position
+            newLaser.GetComponent<Rigidbody2D>().AddForce(transform.up * laserForce);
+            //destroy new laser after 2 seconds
             Destroy(newLaser, 2.0f);
         }
     }
