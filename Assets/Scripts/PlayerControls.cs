@@ -7,14 +7,18 @@ using UnityEngine.UI;
 
 public class PlayerControls : MonoBehaviour
 {
-    private GameManager instance; //var for gameManager
     public GameObject thisPlayer; //variable to store GameObject
     public Transform tf; // A variable to hold our Transform component
     public Rigidbody2D rb; //Rigidbody2D var
+
     public float thrust; //to hold movement speed
-    public float turnThrust; //to hold rotation speed
+    public float thrustBoost; //variable for shift thrust boost
     private float thrustInput; //to set thrust inputs
+
+    public float turnThrust; //to hold rotation speed
+    public float turnBoost; //variable for shift turn boost
     private float turnInput; //to set turn input
+
     public float terminalForce; //for death force
     public Color invColor; //invincibility color
     public Color normalColor;//normal color tor return to
@@ -37,8 +41,8 @@ public class PlayerControls : MonoBehaviour
         // shift "boost" function
         if (Input.GetKey("left shift") | Input.GetKey("right shift"))
         {
-            thrustInput = Input.GetAxis("Vertical") * 5; //get forward and reverse input
-            turnInput = Input.GetAxis("Horizontal") * 6; //get turn input
+            thrustInput = Input.GetAxis("Vertical") * thrustBoost; //get forward and reverse input
+            turnInput = Input.GetAxis("Horizontal") * turnBoost; //get turn input
             transform.Rotate(transform.forward * turnInput * turnThrust * Time.deltaTime); //rotate sprite 
         }
 
@@ -49,16 +53,7 @@ public class PlayerControls : MonoBehaviour
             turnInput = Input.GetAxis("Horizontal"); //get turn input
             transform.Rotate(transform.forward * turnInput * turnThrust * Time.deltaTime); //rotate sprite
         }
-
-        //Return player to (0, 0, 0)
-        if (Input.GetKeyDown("u"))
-        {
-            //remove velocity
-            rb.velocity = Vector2.zero;
-            //set position to origin
-            tf.position = new Vector3(0, 0, 0);
-        }
-
+            
         //exit application with escape key
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -107,6 +102,7 @@ public class PlayerControls : MonoBehaviour
             //respawn
             GetComponent<SpriteRenderer>().enabled = false; //disable renderer
             GetComponent<Collider2D>().enabled = false; //disable collider
+            GameManager.instance.playerGun.gameObject.GetComponent<LaserScript>().enabled = false; //disable player gun
             StartCoroutine(respawnTimer());
 
             //wait timer for respawn

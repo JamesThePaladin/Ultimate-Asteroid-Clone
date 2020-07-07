@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class AlienControls : MonoBehaviour
 {
-    private GameManager instance;
-    public Rigidbody2D rb; //alien rigidbody
-    public Transform playerPos; //for player position
+    public GameObject thisAlien; //holds the alien ship
     public Transform alienPos; //alien position
+    public Rigidbody2D rb; //alien rigidbody
+    public GameObject explosion; //holds our explosion effect
     public float homingSpeed; //var for chase speed
     public int points; //how many points asteroid is worth
-    public GameObject player; //variable for player reference
-    public GameObject explosion; //holds our explosion effect
-    public GameObject thisAlien; //holds the alien ship
+
+    private GameObject player; //variable for player reference
+    private Transform playerPos; //for player position
+
     public float screenTop; //hold screen boundary +y
     public float screenBottom; //hold screen boundary -y
     public float screenRight; //hold screen boundary x
     public float screenLeft; //hold screen boundary -x
 
-
-    
     private void Awake()
     {
         //check if player is empty
@@ -60,10 +59,10 @@ public class AlienControls : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //enemy ship chases player
-        float xDelta = playerPos.localPosition.x - alienPos.localPosition.x;
-        float yDelta = playerPos.localPosition.y - alienPos.localPosition.y;
-        rb.AddForce(new Vector3(xDelta * homingSpeed * Time.deltaTime, yDelta * homingSpeed * Time.deltaTime));
+        //float xDelta = playerPos.localPosition.x - transform.localPosition.x; //get x vector distance
+        //float yDelta = playerPos.localPosition.y - transform.localPosition.y; //get y vector distance
+        //rb.AddForce(new Vector3(xDelta * homingSpeed, yDelta * homingSpeed)); //add our distance as force to rb
+        transform.position = Vector2.MoveTowards(transform.position, playerPos.position, homingSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

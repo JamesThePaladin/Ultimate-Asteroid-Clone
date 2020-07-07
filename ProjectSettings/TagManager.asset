@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Asteroid
   - alienSpawner
+  - LaserEmpty
   layers:
   - Default
   - TransparentFX

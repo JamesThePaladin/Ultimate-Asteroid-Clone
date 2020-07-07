@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance; //variable that holds this instance of the GameManager
-    public PlayerControls playerControls; //to hold toggle
+    public PlayerControls playerControls; //to hold player controls
 
     public List<Transform> spawnPoints; //asteroid spawn point index
     public GameObject asteroidPrefab; //for asteroids
@@ -21,13 +21,15 @@ public class GameManager : MonoBehaviour
     public int maxAliens; //for number of asteroids
     bool canSpawnAlien; //boolean for spawning aliens
 
-    float timer; //timer for spawning
+    private float timer; //timer for spawning
     public float spawnCoolDownTime; //cool down time for spawning 
     
     public int score; //public player score for testing
     public int lives; //lives for player
     public Text scoreText; //reference to score text
     public Text livesText; //reference to lives text
+
+    public GameObject playerGun; //variable for laser sprite empty
 
 
     private void Awake()
@@ -62,13 +64,19 @@ public class GameManager : MonoBehaviour
         scoreText.text = "" + score;
         //update lives in UI
         livesText.text = "Lives: " + lives;
+        //get alien spawn transform
+        alienTf = alienSpawn.GetComponent<Transform>();
+        //get player gun
+        playerGun = GameObject.FindWithTag("LaserEmpty");
     }
 
     // Update is called once per frame
     void Update()
     {
-        //get alien spawn transform
-        alienTf = alienSpawn.GetComponent<Transform>();
+        if (playerGun == null) 
+        {
+            playerGun = GameObject.FindWithTag("LaserEmpty");
+        } 
 
         //subtract the time since the last frame from timer
         timer -= Time.deltaTime; 
@@ -130,7 +138,7 @@ public class GameManager : MonoBehaviour
         //minus a life
         lives--;
         //update lives in UI
-        livesText.text = "Lives: " + GameManager.instance.lives;
+        livesText.text = "Lives: " + lives;
 
         //if lives are less than or equal to 0 game over
         if (lives <= 0) 
@@ -151,7 +159,7 @@ public class GameManager : MonoBehaviour
         //set color to invulnerable color
         sr.color = playerControls.invColor;
         //waits to put the collider back
-        Invoke("Invulnerable", 3f); 
+        Invoke("Invulnerable", 4f); 
     }
 
     void Invulnerable()
@@ -159,6 +167,8 @@ public class GameManager : MonoBehaviour
         //enable collider
         playerControls.gameObject.GetComponent<Collider2D>().enabled = true;
         //change color back to normal
-        playerControls.gameObject.GetComponent<SpriteRenderer>().color = playerControls.normalColor; 
+        playerControls.gameObject.GetComponent<SpriteRenderer>().color = playerControls.normalColor;
+        //enable player gun
+        playerGun.gameObject.GetComponent<LaserScript>().enabled = true;
     }
 }

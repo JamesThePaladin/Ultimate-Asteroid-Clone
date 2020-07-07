@@ -10,7 +10,6 @@ public class AsteroidScript : MonoBehaviour
     public int asteroidSize; //for asteroid breaking 3 = large, 2 = medium, 1 = small
     public GameObject asteroidMedium; //reference to medium size prefab
     public GameObject asteroidSmall; //reference to small size prefab
-    public float thrust; //for spawning speed
     public float maxTorque; // hold asteroid max torque
     public float startSpeed; //var for chase speed
     public int points; //how many points asteroid is worth
@@ -21,9 +20,8 @@ public class AsteroidScript : MonoBehaviour
     public float screenRight; //hold screen boundary x
     public float screenLeft; //hold screen boundary -x
 
-    private GameManager instance; //game manager instance
-    public GameObject player; //variable for player reference
-    public Transform playerPos; //for player position
+    private GameObject player; //variable for player reference
+    private Transform playerPos; //for player position
 
     private void Awake()
     {
@@ -104,6 +102,7 @@ public class AsteroidScript : MonoBehaviour
             //make an explosion
             GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(newExplosion, 3f);
+
             //destroy the asteroid
             Destroy(this.gameObject);
         }
@@ -114,7 +113,6 @@ public class AsteroidScript : MonoBehaviour
         //if game object is not an asteroid
         if (!other.gameObject.CompareTag("Asteroid"))
         {
-            Debug.Log("We've been hit!");
             //lower the number of asteroids
             GameManager.instance.numberOfAsteroids--;
             //make an explosion
