@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 164054999}
   - component: {fileID: 4934663483727086077}
   - component: {fileID: 1285465454135551875}
+  - component: {fileID: -5854630116431929426}
   m_Layer: 0
   m_Name: alienShip
   m_TagString: Enemy
@@ -96,12 +97,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e1fbf58b01c75b4d8bba643558ec8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 4934663483727086077}
+  thisAlien: {fileID: 2089072404690297624}
   alienPos: {fileID: 2540979818292609616}
+  rb: {fileID: 4934663483727086077}
+  explosion: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
   homingSpeed: 3
   points: 100
-  explosion: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
-  thisAlien: {fileID: 2089072404690297624}
   screenTop: 10.42
   screenBottom: -10.92
   screenRight: 13.55
@@ -138,6 +139,22 @@ CircleCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.06, y: 0}
+  serializedVersion: 2
+  m_Radius: 4.2
+--- !u!58 &-5854630116431929426
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089072404690297624}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.06, y: 0}

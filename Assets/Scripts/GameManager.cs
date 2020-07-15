@@ -49,9 +49,6 @@ public class GameManager : MonoBehaviour
             //display message in the console to inform of its demise
             Debug.Log("Warning: A second game manager was detected and destrtoyed"); 
         }
-
-        //initialize score
-        score = 0; 
     }
     //Start is called before the first frame update
     void Start()
@@ -68,6 +65,8 @@ public class GameManager : MonoBehaviour
         alienTf = alienSpawn.GetComponent<Transform>();
         //get player gun
         playerGun = GameObject.FindWithTag("LaserEmpty");
+        //initialize score
+        score = 0;
     }
 
     // Update is called once per frame

@@ -84,9 +84,9 @@ public class AlienControls : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        if (gameObject)
+        if (!other.gameObject.CompareTag("Enemy"))
         {
             //lower number of aliens
             GameManager.instance.numberOfAliens--;
